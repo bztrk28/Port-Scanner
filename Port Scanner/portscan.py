@@ -15,7 +15,7 @@ class PortScanner:
     def scan_port(self, port):
         """Check if a port is open (TCP)."""
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
-            sock.settimeout(1)  # Timeout after 1 second
+            sock.settimeout(1)  #Timeout
             result = sock.connect_ex((self.target, port))
             if result == 0:
                 with self.lock:
@@ -25,17 +25,16 @@ class PortScanner:
     def scan_udp_port(self, port):
         """Check if a UDP port is open."""
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
-            sock.settimeout(1)  # Timeout after 1 second
+            sock.settimeout(1)  #Timeout
             try:
-                # Sending a dummy packet
                 sock.sendto(b'', (self.target, port))
-                # If we receive a response, the port is open
+                # Port açıksa yanıt dönecek
                 sock.recvfrom(1024)
                 with self.lock:
                     self.open_ports_udp.append(port)
                 print(f"UDP Port {port} is open")
             except socket.error:
-                pass  # No response or port is closed
+                pass  # Port kapalıysa yanıt yok
 
     def process_queue(self):
         """Process the queue for port scanning."""
@@ -51,7 +50,7 @@ class PortScanner:
             self.queue.put(port)
 
         threads = []
-        for _ in range(100):  # Maximum 100 threads
+        for _ in range(100):  # Maximum 100
             thread = threading.Thread(target=self.process_queue)
             thread.start()
             threads.append(thread)
@@ -66,7 +65,7 @@ class PortScanner:
             self.queue.put(port)
 
         threads = []
-        for _ in range(100):  # Maximum 100 threads
+        for _ in range(100):  # Maximum 100
             thread = threading.Thread(target=self.process_udp_queue)
             thread.start()
             threads.append(thread)
