@@ -13,7 +13,7 @@ class PortScanner:
         self.queue = Queue()
 
     def scan_port(self, port):
-        """Check if a port is open (TCP)."""
+        # TCP port
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
             sock.settimeout(1)  #Timeout
             result = sock.connect_ex((self.target, port))
@@ -23,7 +23,7 @@ class PortScanner:
                 print(f"TCP Port {port} is open")
 
     def scan_udp_port(self, port):
-        """Check if a UDP port is open."""
+        # UDP port
         with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as sock:
             sock.settimeout(1)  #Timeout
             try:
@@ -50,7 +50,7 @@ class PortScanner:
             self.queue.put(port)
 
         threads = []
-        for _ in range(100):  # Maximum 100
+        for _ in range(100):  # a
             thread = threading.Thread(target=self.process_queue)
             thread.start()
             threads.append(thread)
@@ -65,7 +65,7 @@ class PortScanner:
             self.queue.put(port)
 
         threads = []
-        for _ in range(100):  # Maximum 100
+        for _ in range(100):  
             thread = threading.Thread(target=self.process_udp_queue)
             thread.start()
             threads.append(thread)
@@ -74,14 +74,14 @@ class PortScanner:
             thread.join()
 
     def process_udp_queue(self):
-        """Process the queue for UDP port scanning."""
+        # UDP için sırayla tarıyor. İşlenmemiş port olduğu sürece döngü devam ediyor.
         while not self.queue.empty():
             port = self.queue.get()
-            self.scan_udp_port(port)  # UDP scan
+            self.scan_udp_port(port)  # UDP
             self.queue.task_done()
 
     def print_results(self):
-        """Print the results of the scan."""
+        # Sonuçları ekrana yazdırıyor.
         print("\nScan complete.")
         if self.open_ports_tcp:
             print(f"Open TCP ports: {', '.join(map(str, self.open_ports_tcp))}")
@@ -108,9 +108,9 @@ if __name__ == "__main__":
         # UDP taraması
         scanner.udp_scan()
         
-        # Sonuçları yazdır
+        # Geçersiz aralık girilirse bu hata verilecek
         scanner.print_results()
     except ValueError:
         print("[Error] Please enter a valid port range.")
     except Exception as e:
-        print(f"[Error] {e}")
+        print(f"[Error] {e}") # Farklı bir hata durumunda Error yazacak
