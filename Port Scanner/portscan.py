@@ -37,14 +37,13 @@ class PortScanner:
                 pass  # Port kapalıysa yanıt yok
 
     def process_queue(self):
-        """Process the queue for port scanning."""
-        while not self.queue.empty():
+        while not self.queue.empty(): # Portları sırasıyla işleyecek
             port = self.queue.get()
-            self.scan_port(port)  # TCP scan
+            self.scan_port(port)
             self.queue.task_done()
 
     def tcp_scan(self):
-        """Scan TCP ports."""
+        # TCP taraması
         print(f"Scanning TCP ports from {self.start_port} to {self.end_port}...")
         for port in range(self.start_port, self.end_port + 1):
             self.queue.put(port)
@@ -59,7 +58,7 @@ class PortScanner:
             thread.join()
 
     def udp_scan(self):
-        """Scan UDP ports."""
+        # UDP taraması
         print(f"Scanning UDP ports from {self.start_port} to {self.end_port}...")
         for port in range(self.start_port, self.end_port + 1):
             self.queue.put(port)
